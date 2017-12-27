@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>聊天界面</title>
+  <script src="config.js"></script>
+  <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+  <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+  <style>
+      *{
+      padding: 0;
+      margin: 0;
+      }
+      .title{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        border-bottom: 1px solid gainsboro;
+        padding: .2rem;
+      }
+      .box{
+           height: 9rem;
+           border: solid 1px red;
+           font-size: .25rem;
+           padding: .2rem;
+           margin-top: 1rem;
+           overflow: scroll;
+      }
+      .mymsg{
+      background: black;
+      color: white;
+      padding: .1rem;
+      border-radius: .1rem;
+      }
+      .bobbit-msg{
+      border: 1px red solid;
+        color: black;
+        padding: .1rem;
+        border-radius: .1rem;
+      }
+      .input-box{
+      padding: 0;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      border: solid 1px black;
+
+      }
+      .chat-box li{
+        margin-bottom: .2rem;
+        list-style: none;
+      }
+    .input-box{
+        font-size: 0;
+        vertical-align: bottom;
+    }
+    .input-box input{
+        margin: 0;
+        display: inline-block;
+        width: 70%;
+        font-size: .26rem;
+        height: .6rem;
+        vertical-align: -webkit-baseline-middle;
+    }
+    .input-box button{
+        display: inline;
+        width: 30%;
+        font-size: .26rem;
+    }
+</style>
+</head>
+<body>
+    <div class="title text-center">智能机器人图灵</div>
+    <div class="box">
+        <ul class="chat-box"></ul>
+    </div>
+    <div class="input-box">
+        <input id="msg-input" class="form-control" type="text" placeholder="请输入你想说的话">
+        <button id="sendmsg" class="btn btn-primary">发送</button>
+    </div>
+    <script>
+    $(function() {
+      $(document).keydown(function(event){
+              if(event.keyCode==13){
+               $("#sendmsg").click()
+              }
+           });
+          $("#sendmsg").click(function() {
+
+            var msg=$("#msg-input").val()
+            $(".title").text("对方正在输入中..")
+            var myitem="<li class='text-right '><span class='mymsg'>"+msg+"</span>  :  我</li>"
+             $("#msg-input").val("")
+            $(".chat-box").append(myitem)
+            $.ajax({
+                url:"http://www.tuling123.com/openapi/api",
+                 data:{
+                    "key":"1e02f559c8964db59567e79b46d69b25",
+                    "info":msg,
+                    "userid":"nomore"
+                 },success:function(data) {
+                   //console.log(data.text)
+                      var robbititem="<li class='text-left '>图灵  :  <span class='bobbit-msg'>"+data.text+"</span></li>"
+                     $(".title").text("智能机器人图灵")
+                      $(".chat-box").append(robbititem)
+                      $(".chat-box").scrollTop=$(".chat-box").scrollHeight;
+
+                 }
+            })
+          })
+    })
+</script>
+</body>
+</html>
